@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using CrudApi.DataAccess.Queries.Product.GetProduct;
 using CrudApi.Logics;
 using CrudApi.Logics.Interfaces;
 using CrudApi.Logics.Products.CreateProduct;
@@ -38,18 +39,16 @@ namespace CrudApi.Web.Controllers
 
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = Logic.GetById(id);
+            var result = await Mediator.Send(new GetProductQuery(){Id = id});
 
             if (result.IsSuccessful == false)
             {
                 result.AddErrorToModelState(ModelState);
                 return BadRequest(ModelState);
             }
-
-            var productToReturn = Mapper.Map<ProductDto>(result.Value);
-            return Ok(productToReturn);
+            return Ok(result);
         }
 
 

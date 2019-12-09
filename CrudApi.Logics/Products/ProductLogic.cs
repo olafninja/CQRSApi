@@ -42,25 +42,25 @@ namespace CrudApi.Logics.Products
             return Result.Ok(Repository.GetAllActive());
         }
 
-        public Result<Product> Add(Product product)
-        {
-            if (product == null)
-            {
-                throw new ArgumentNullException(nameof(product));
-            }
+        //public Result<Product> Add(Product product)
+        //{
+        //    if (product == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(product));
+        //    }
 
-            var validatorResult = Validator.Validate(product);
+        //    var validatorResult = Validator.Validate(product);
 
-            if (validatorResult.IsValid == false)
-            {
-                return Result.Error<Product>(validatorResult.Errors);
-            }
+        //    if (validatorResult.IsValid == false)
+        //    {
+        //        return Result.Error<Product>(validatorResult.Errors);
+        //    }
 
-            Repository.Add(product);
-            Repository.SaveChanges();
+        //    Repository.Add(product);
+        //    Repository.SaveChanges();
 
-            return Result.Ok(product);
-        }
+        //    return Result.Ok(product);
+        //}
 
         public Result<Product> Update(Product product)
         {

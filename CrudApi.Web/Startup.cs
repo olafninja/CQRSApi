@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using CrudApi.DataAccess;
+using CrudApi.Logics.Products.CreateProduct;
 using CrudApi.Web.AutoFac;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +36,7 @@ namespace CrudApi.Web
                 .AddFluentValidation();
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
-
+            services.AddMediatR(typeof(CreateProductCommand).Assembly.GetTypes());
             var applicationContainer = AutoFacConfig.Configure(services);
             return new AutofacServiceProvider(applicationContainer);
         }

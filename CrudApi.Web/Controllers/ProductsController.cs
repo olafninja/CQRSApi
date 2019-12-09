@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using CrudApi.Logics;
 using CrudApi.Logics.Interfaces;
+using CrudApi.Logics.Products.CreateProduct;
 using CrudApi.Models;
 using CrudApi.Web.Dto;
+using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,13 +21,19 @@ namespace CrudApi.Web.Controllers
         protected IProductLogic Logic => _logic.Value;
 
         private readonly Lazy<IMapper> _mapper;
+
         protected IMapper Mapper =>_mapper.Value;
 
+        private readonly Lazy<IMediator> _mediator;
+        protected IMediator Mediator => _mediator.Value;
+
+
         public ProductController(Lazy<IProductLogic> logic,
-            Lazy<IMapper> mapper)
+            Lazy<IMapper> mapper, Lazy<IMediator> mediator)
         {
             _logic = logic;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
 
@@ -54,10 +63,9 @@ namespace CrudApi.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Post(ProductDto productDto)
+        public async Task<IActionResult> Post(CreateProductCommand command)
         {
-            var productToAdd = Mapper.Map<Product>(productDto);
-            var result = Logic.Add(productToAdd);
+            var result = await Mediator.Send(command);
 
             if (result.IsSuccessful == false)
             {
@@ -65,8 +73,7 @@ namespace CrudApi.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            productDto.Id = result.Value.Id;
-            return CreatedAtAction(nameof(Post), productDto);
+            return CreatedAtAction(nameof(Post), result);
         }
 
 

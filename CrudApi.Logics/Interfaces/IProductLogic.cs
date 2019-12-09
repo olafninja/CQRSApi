@@ -9,7 +9,6 @@ namespace CrudApi.Logics.Interfaces
     {
         Result<Product> GetById(int id);
         Result<IEnumerable<Product>> GetAllActive();
-        Result<Product> Add(Product product);
         Result<Product> Update(Product product);
         Result<Product> Remove(Product product);
     }
